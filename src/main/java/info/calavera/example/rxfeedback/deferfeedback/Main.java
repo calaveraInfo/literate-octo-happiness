@@ -21,8 +21,7 @@ public class Main {
 		final Observable<State> stateStream = sourceStream
 				.mergeWith(Observable.defer(() -> feedback.get()))
 				.scan(new State(), (state, message) -> state.update(message))
-				.publish()
-				.refCount(2); // prevents infinite subscription loops
+				.share(); // prevents infinite subscription loops
 		
 		feedback.set(stateStream
 				.flatMap(state -> {
